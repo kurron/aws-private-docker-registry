@@ -79,15 +79,17 @@
   hosts: Ubuntu
   sudo: true
   vars:
-       aws_key: "AKIAIXXGW3JMVXL4L3SA"
-       aws_secret_key: "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"
+       aws_key: "AKIAJQ7WYVOKOK2M4BXQ"
+       aws_secret_key: "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"
        aws_region: "us-west-2"
        bucket_name: "org-kurron-docker-registry"
-       data_path: "/var/lib/registry"
+       auth_path: "/var/lib/auth"
 
   tasks:
-    - name: Create data directory 
-      file: path={{ data_path }} state=directory mode=0775 group=docker owner=root
-    - name: Copy Docker Compose File 
-      template: src=templates/docker-compose.yml dest=/home/ubuntu/docker-compose.yml mode=0444 backup=yes force=yes
+    - name: Create auth directory
+      file: path={{ auth_path }} state=directory mode=0775 group=docker owner=root
+    - name: Copy Password File
+      template: src=files/htpasswd dest={{ auth_path }}/htpasswd mode=0660 backup=no force=yes
+    - name: Copy Docker Compose File
+      template: src=templates/docker-compose.yml dest=/home/ubuntu/docker-compose.yml mode=0444 backup=no force=yes
 

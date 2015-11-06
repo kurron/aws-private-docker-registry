@@ -3,15 +3,18 @@ registry:
   restart: always
   image: registry:2
   ports:
-    - 5000:5000
+    - 80:5000
   environment:
-    REGISTRY_S3_AWSACCESSKEY: "{{ aws_key }}"
-    REGISTRY_S3_AWSSECRETKEY: "{{ aws_secret_key }}"
-    REGISTRY_S3_REGION: "{{ aws_region }}"
-    REGISTRY_S3_BUCKETNAME: "{{ bucket_name }}"
-    REGISTRY_S3_ENCRYPT: "false"
-    REGISTRY_S3_SECURE: "false"
-    REGISTRY_S3_V4AUTH: "true"
-
+    REGISTRY_STORAGE: "s3"
+    REGISTRY_STORAGE_S3_ACCESSKEY: "{{ aws_key }}"
+    REGISTRY_STORAGE_S3_SECRETKEY: "{{ aws_secret_key }}"
+    REGISTRY_STORAGE_S3_REGION: "{{ aws_region }}"
+    REGISTRY_STORAGE_S3_BUCKET: "{{ bucket_name }}"
+    REGISTRY_STORAGE_S3_ENCRYPT: "true"
+    REGISTRY_STORAGE_S3_SECURE: "true"
+    REGISTRY_STORAGE_S3_V4AUTH: "true"
+    REGISTRY_AUTH: "htpasswd"
+    REGISTRY_AUTH_HTPASSWD_PATH: "/auth/htpasswd"
+    REGISTRY_AUTH_HTPASSWD_REALM: "Registry Realm"
   volumes:
-    - {{ data_path}}:/var/lib/registry
+    - {{ auth_path }}:/auth

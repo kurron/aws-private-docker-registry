@@ -99,3 +99,20 @@ resource "aws_iam_policy" "docker_registry_s3_access" {
 }
 EOF
 }
+
+resource "aws_iam_user" "registry_user" {
+    name = "registry"
+    path = "/"
+}
+
+resource "aws_iam_access_key" "registry_user" {
+    user = "${aws_iam_user.registry_user.name}"
+}
+
+resource "aws_iam_policy_attachment" "registry_attachment" {
+    name = "registry-attachment"
+    users = ["${aws_iam_user.registry_user.name}"]
+    roles = []
+    groups = []
+    policy_arn = "${aws_iam_policy.docker_registry_s3_access.arn}"
+}
