@@ -1,0 +1,77 @@
+#!/usr/bin/env ansible-playbook
+
+- name: Gather prerequisites 
+  hosts: all
+  gather_facts: True
+  tasks:
+    - name: create groups based on distribution
+      group_by: key={{ ansible_distribution }}
+
+- name: Update Packages 
+  hosts: Ubuntu
+  gather_facts: True
+  sudo: True
+  tasks:
+    - name: Update the instances packages
+      apt: update_cache=yes cache_valid_time=3600 upgrade=dist install_recommends=true
+
+- name: Install Docker
+  hosts: docker
+  sudo: True
+  vars:
+       user_account: ubuntu
+       compose_version: "1.5.0"
+  tasks:
+    - name: Install cURL
+      apt: name=curl state=latest update_cache=true cache_valid_time=600
+    - name: Download Docker Installation Script
+      command: /usr/bin/curl --location --output /root/install-docker https://get.docker.com/ creates=/root/install-docker
+    - name: Set Permission Bits On The Docker Installation Script
+      file: path=/root/install-docker owner=root group=root mode=0500
+    - name: Execute Docker Installation Script
+      shell: /root/install-docker creates=/usr/bin/docker
+    - name: Set Memory and Swap Accounting
+      lineinfile: dest=/etc/default/grub regexp='^GRUB_CMDLINE_LINUX=""' line='GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"'
+    - name: Make some adjustments to the Docker configuration
+      lineinfile: dest=/etc/default/docker line='DOCKER_OPTS="-H tcp://0.0.0.0:2375 -H unix:///var/run/docker.sock --storage-driver=aufs"'
+    - name: Add account to the docker group 
+      user: name={{ user_account }} groups=docker
+    - name: Restart Docker
+      command: service docker restart
+    - name: Test Docker
+      command: docker run hello-world
+
+    - name: Download Docker Compose Script
+      shell: /usr/bin/curl --location --output /usr/local/bin/docker-compose https://github.com/docker/compose/releases/download/{{ compose_version }}/docker-compose-`uname -s`-`uname -m` creates=/usr/local/bin/docker-compose
+    - name: Set Permission Bits On The Docker Compose Script
+      file: path=/usr/local/bin/docker-compose owner=root group=root mode=0555
+    - name: Echo Docker Compose version
+      command: docker-compose --version
+
+- name: Configure Rsyslog To Forward to Loggly
+  hosts: Ubuntu
+  sudo: True
+  vars:
+       logglyKey: "91ec9498-62c1-42fc-b9e9-a977628cb17d"
+       logglyTag: "docker-registry"
+  tasks:
+    - name: Copy Rsyslog Configuration File 
+      template: src=templates/loggly.conf dest=/etc/rsyslog.d/22-loggly.conf mode=0444 backup=yes force=yes
+    - name: Restart the Rsyslog
+      command: /usr/sbin/service rsyslog restart
+    - name: Send a test message 
+      command: logger 'Hello From Ansible!'
+
+- name: Install Sysdig
+  hosts: Ubuntu
+  sudo: True
+  tasks:
+      - name: Download the signing key
+        apt_key: url=https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public state=present
+      - name: Add the Apt repository
+        apt_repository: repo='deb http://download.draios.com/stable/deb stable-$(ARCH)/' state=present
+      - name: Install Headers
+        shell: apt-get -y install linux-headers-$(uname -r)
+      - name: Install Sysdig
+        apt: name=sysdig state=latest update_cache=true
+
