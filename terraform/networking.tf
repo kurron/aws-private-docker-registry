@@ -5,7 +5,7 @@ resource "aws_vpc" "main" {
     enable_dns_hostnames = true
 
     tags {
-        Name = "Asgard Lite"
+        Name = "Docker Registry"
         Realm = "${var.realm}"
         Purpose = "${var.purpose}"
         Managed-By = "${var.created_by}"
@@ -31,7 +31,7 @@ resource "aws_internet_gateway" "main" {
     vpc_id = "${aws_vpc.main.id}"
 
     tags {
-        Name = "Asgard Lite"
+        Name = "Docker Registry"
         Realm = "${var.realm}"
         Purpose = "${var.purpose}"
         Managed-By = "${var.created_by}"
@@ -46,7 +46,7 @@ resource "aws_route_table" "main" {
     }
 
     tags {
-        Name = "Asgard Lite"
+        Name = "Docker Registry"
         Realm = "${var.realm}"
         Purpose = "${var.purpose}"
         Managed-By = "${var.created_by}"
@@ -56,46 +56,6 @@ resource "aws_route_table" "main" {
 resource "aws_main_route_table_association" "main" {
     vpc_id = "${aws_vpc.main.id}"
     route_table_id = "${aws_route_table.main.id}"
-}
-
-resource "aws_security_group" "mongodb_traffic" {
-    name = "mongodb-traffic"
-    description = "Allow inbound MongoDB and SSH traffic. All outbound traffic is permitted."
-    vpc_id = "${aws_vpc.main.id}"
-    tags {
-        Name = "MongoDB Traffic"
-        Realm = "${var.realm}"
-        Purpose = "${var.purpose}"
-        Managed-By = "${var.created_by}"
-    }
-
-    ingress {
-        from_port = 27017
-        to_port = 27019
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    ingress {
-        from_port = 28017
-        to_port = 28017
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    ingress {
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
 }
 
 resource "aws_security_group" "docker_traffic" {

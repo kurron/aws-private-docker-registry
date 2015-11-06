@@ -10,12 +10,12 @@ variable "vpc_network" {
 
 variable "realm" {
     description = "The logical group that all of the infrastructure belongs to."
-    default = "Asgard Lite Testing" 
+    default = "Docker Registry Testing" 
 }
 
 variable "purpose" {
     description = "A tag indicating why all the infrastructure exists, eg. load-testing."
-    default = "quality-assurance" 
+    default = "experimentation" 
 }
 
 variable "created_by" {
@@ -53,7 +53,7 @@ variable "key_name" {
     default = {
         us-east-1      = ""
         us-west-1      = ""
-        us-west-2      = "asgard-lite-test"
+        us-west-2      = "docker-registry-test"
         eu-west-1      = ""
         eu-central-1   = ""
         sa-east-1      = ""
@@ -88,87 +88,9 @@ variable "availability_zone" {
   }
 }
 
-variable "mongodb_instance_type" {
-    description = "EC2 instance type of the MongoDB instances."
-    default = "t2.micro"
-#   default = "t2.small"
-}
-
-variable "mongodb_instance_count" {
-    description = "How many EC2 instances to spin up."
-    default = "3"
-}
-
-variable "mongodb_storage_size" {
-    description = "How many GB of disk space to allocate."
-    default = "16"
-}
-
-variable "mongodb_private_ip" {
-  default = {
-    "0" = "10.0.0.10"
-    "1" = "10.0.2.10"
-    "2" = "10.0.4.10"
-  }
-}
-
-variable "docker_instance_type" {
-    description = "EC2 instance type of the Docker instances."
-    default = "t2.micro"
-#   default = "t2.medium"
-}
-
-variable "docker_instance_count" {
-    description = "How many EC2 instances to spin up."
-    default = "2"
-}
-
-variable "docker_storage_size" {
-    description = "How many GB of disk space to allocate."
-    default = "100"
-}
-
-variable "docker_image_storage_size" {
-    description = "How many GB of disk space to allocate for containers."
-    default = "25"
-}
-
-variable "docker_private_ip" {
-  default = {
-    "0" = "10.0.0.20"
-    "1" = "10.0.2.20"
-    "2" = "10.0.4.20"
-  }
-}
-
-variable "elasticsearch_instance_type" {
-    description = "EC2 instance type of the Elasticsearch instances."
-    default = "t2.micro.elasticsearch"
-}
-
-variable "elasticsearch_instance_count" {
-    description = "How many Elastisearch instances to spin up."
-    default = "2"
-}
-
-variable "ebs_destroy_on_termination" {
-    description = "Destroy the disk storage when the EC2 instance terminates? In production, this should be false."
-    default = "true"
-}
-
 variable "ebs_optimization" {
     description = "Whether or not the instance should optimize its EBS access."
     default = "false"
-}
-
-variable "customer_gateway_asn" {
-    description = "The gateway's Border Gateway Protocol (BGP) Autonomous System Number (ASN)"
-    default = "65000"
-}
-
-variable "customer_gateway_address" {
-    description = "The IP address of the gateway's Internet-routable external interface."
-    default = "64.222.174.146"
 }
 
 variable "registry_private_ip" {

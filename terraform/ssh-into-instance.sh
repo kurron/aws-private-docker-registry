@@ -1,4 +1,4 @@
 #!/bin/bash
 
 IP=$1
-ssh -v -i asgard-lite-test.pem ubuntu@${IP}
+ssh -v -i docker-registry-test.pem ubuntu@${IP}
