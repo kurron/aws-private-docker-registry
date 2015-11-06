@@ -102,3 +102,7 @@ variable "registry_private_ip" {
 }
 
 
+variable "registry_bucket_name" {
+    description = "The bucket to use for Docker image storage."
+    default = "org-kurron-docker-registry"
+}
