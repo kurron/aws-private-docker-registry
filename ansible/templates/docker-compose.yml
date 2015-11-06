@@ -1,0 +1,17 @@
+registry:
+  container_name: registry
+  restart: always
+  image: registry:2
+  ports:
+    - 5000:5000
+  environment:
+    REGISTRY_S3_AWSACCESSKEY: "{{ aws_key }}"
+    REGISTRY_S3_AWSSECRETKEY: "{{ aws_secret_key }}"
+    REGISTRY_S3_REGION: "{{ aws_region }}"
+    REGISTRY_S3_BUCKETNAME: "{{ bucket_name }}"
+    REGISTRY_S3_ENCRYPT: "false"
+    REGISTRY_S3_SECURE: "false"
+    REGISTRY_S3_V4AUTH: "true"
+
+  volumes:
+    - {{ data_path}}:/var/lib/registry

@@ -75,3 +75,19 @@
       - name: Install Sysdig
         apt: name=sysdig state=latest update_cache=true
 
+- name: Create a Docker Compose file 
+  hosts: Ubuntu
+  sudo: true
+  vars:
+       aws_key: "AKIAIXXGW3JMVXL4L3SA"
+       aws_secret_key: "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"
+       aws_region: "us-west-2"
+       bucket_name: "org-kurron-docker-registry"
+       data_path: "/var/lib/registry"
+
+  tasks:
+    - name: Create data directory 
+      file: path={{ data_path }} state=directory mode=0775 group=docker owner=root
+    - name: Copy Docker Compose File 
+      template: src=templates/docker-compose.yml dest=/home/ubuntu/docker-compose.yml mode=0444 backup=yes force=yes
+

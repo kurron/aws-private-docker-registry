@@ -66,3 +66,36 @@ resource "aws_iam_role_policy" "docker_registry_policy" {
 }
 EOF
 }
+
+resource "aws_iam_policy" "docker_registry_s3_access" {
+    description = "Docker Registry S3 Access"
+    name = "docker-registry-s3-access"
+    path = "/"
+    policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${var.registry_bucket_name}"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:DeleteObject"
+            ],
+            "Resource": [
+                "arn:aws:s3:::${var.registry_bucket_name}/*"
+            ]
+        }
+    ]
+}
+EOF
+}
