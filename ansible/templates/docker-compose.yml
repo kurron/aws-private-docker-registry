@@ -4,6 +4,10 @@ registry:
   image: registry:2
   ports:
     - 80:5000
+  log_driver: "syslog"
+  log_opt:
+    syslog-facility: daemon
+    syslog-tag: "docker-registry"
   environment:
     REGISTRY_STORAGE: "s3"
     REGISTRY_STORAGE_S3_ACCESSKEY: "{{ aws_key }}"
