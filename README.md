@@ -1,7 +1,7 @@
 #Overview
 This project creates an [AWS](http://aws.amazon.com/) environment suitable for running a private
-[Docker Registry](https://docs.docker.com/registry/) in the Amazon cloud. The configuration uses CloudFront 
-to manage network traffic and S3 for storage. 
+[Docker Registry](https://docs.docker.com/registry/) in the Amazon cloud. The configuration uses 
+Elastic Load Balancer to manage network traffic and S3 for storage. 
 
 #Prerequisites
 
@@ -17,13 +17,14 @@ to manage network traffic and S3 for storage.
 This project is a collection of data files consumed by Terraform and Ansible so there is nothing to build. 
 
 #Installation
-**TODO** 
-
+* follow the instructions in the `terraform/README.md` file to create the necessary AWS infrastructure
+* follow the instructions in the `ansible/README.md` file to install the necessary software into your instance
+  
 #Tips and Tricks
-**TODO** 
+See the *Tips and Tricks* section of each sub-project. 
 
 #Troubleshooting
-**TODO** 
+See the *Troubleshooting* section of each sub-project. 
 
 #License and Credits
 This project operates under Apache open source license.

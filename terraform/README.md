@@ -29,6 +29,30 @@ to connect to an instance.
 If you want to use a different key pair, you'll need to edit the `variables.tf` and adjust the `key_name` variable to use your SSH Key 
 Pair name.  You also need to adjust the `key_path` variable to point to the private half of the SSH key pair.
 
+**Important:** at the end of the process, Terraform will display some information including the key information for the newly created 
+user that will have the proper S3 permissions to access the bucket and objects.
+
+```bash
+Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+The state of your infrastructure has been saved to the path
+below. This state is required to modify and destroy your
+infrastructure, so keep it safe. To inspect the complete state
+use the `terraform show` command.
+
+State path: terraform.tfstate
+
+Outputs:
+
+  elb-dns    = load-balancer-291039105.us-west-2.elb.amazonaws.com
+  key        = AKIAJFFJ73Z5VPCU7GUA
+  key-status = Active
+  secret-key = tSduMZrxTJLrz4ahRj2DZwY8ZLfZk+T4gq/wGZ66
+  user       = registry
+```
+
+**If you forget to save these key values you will not be able provision your new instance.**  You have been warned.
+
 #Tips and Tricks
 
 ##Creating The Virtual Hardware
@@ -51,19 +75,11 @@ storage assets will be destroyed and all your data will be lost.** You have been
 All the assets are placed within a VPC so as to isolate it from other installations.  Only one availability zone is used since 
 this configuration is not highly available. 
 
-Each subnet is color coded to make troubleshooting a bit easier.  Where appropriate, assets are tagged using the color code so 
-can quickly know which subnet and AZ an asset resides in.
-
-* first AZ = Blue
-* second AZ = Green
-* third AZ = Red
-* fourth AZ = White
-* fifth AZ = Orange
-* sixth AZ = Black
-
-*NOTE:* many regions only have 2 or 3 AZs so not all colors are used.
-
 #Troubleshooting
+
+#Use Your Own Keys
+The keys in this project won't work for you because they are associated with a different account.  Make sure to substitute your own 
+keys!
 
 ##Terraform Version
 Easily, the largest cause of problems is that an older version of Terraform is being used.  Terraform is constantly being updated to keep 

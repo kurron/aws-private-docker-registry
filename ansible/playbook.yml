@@ -51,8 +51,12 @@
 - name: Configure Rsyslog To Forward to Loggly
   hosts: Ubuntu
   sudo: True
+  vars_prompt:
+    - name: "logglyKey"
+      prompt: "The loggly API key to use when configuring the rsyslog daemon."
+      private: no
+      default: "91ec9498-62c1-42fc-b9e9-a977628cb17d"
   vars:
-       logglyKey: "91ec9498-62c1-42fc-b9e9-a977628cb17d"
        logglyTag: "docker-registry"
   tasks:
     - name: Copy Rsyslog Configuration File 
@@ -78,10 +82,20 @@
 - name: Create a Docker Compose file 
   hosts: Ubuntu
   sudo: true
+  vars_prompt:
+    - name: "aws_key"
+      prompt: "The key value displayed at the end of the Terraform step."
+      private: no
+      default: "AKIAJFFJ73Z5VPCU7GUA"
+    - name: "aws_secret_key"
+      prompt: "The secret-key value displayed at the end of the Terraform step."
+      private: no
+      default: "tSduMZrxTJLrz4ahRj2DZwY8ZLfZk+T4gq/wGZ66"
+    - name: "aws_region"
+      prompt: "The AWS region that the Terraform step ran against."
+      private: no
+      default: "us-west-2"
   vars:
-       aws_key: "AKIAJFFJ73Z5VPCU7GUA"
-       aws_secret_key: "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"
-       aws_region: "us-west-2"
        bucket_name: "org-kurron-docker-registry"
        auth_path: "/var/lib/auth"
 
