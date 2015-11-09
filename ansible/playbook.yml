@@ -107,3 +107,9 @@
     - name: Copy Docker Compose File
       template: src=templates/docker-compose.yml dest=/home/ubuntu/docker-compose.yml mode=0444 backup=no force=yes
 
+- name: Run The Docker Compose file 
+  hosts: Ubuntu
+  sudo: false
+  tasks:
+    - name: Run The Docker Compose File
+      command: /usr/local/bin/docker-compose up -d chdir=/home/ubuntu

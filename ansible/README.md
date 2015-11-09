@@ -24,10 +24,59 @@ path specified in `ansible.cfg` file matches what you have locally on your disk.
 To install the environment all you have to do is issue `./playbook.yml` from the command line and specify any values it may prompt you for.  
 Remember, **you must have the key values from the Terraform step** or this step will not be able to properly configure the S3 access.
 In a few moments your instance should be provisioned and ready to go.  **Please note that you must reboot the instance in order for some of the optimizations to take affect.** 
+The easiest way to reboot is to run `bin/reboot-server.sh` from the command-line.
 
 #Tips and Tricks
 
-##TBD
+##Configure Your Docker Daemon
+This registry does not use TLS to simplify the setup so you need to tell your Docker daemon that it is okay to use insecure communications.
+Do this by editing your `/etc/default/docker` file so that it knows about your endpoint.
+
+```bash
+# Docker Upstart and SysVinit configuration file
+
+# Customize location of Docker binary (especially for development testing).
+#DOCKER="/usr/local/bin/docker"
+
+# Use DOCKER_OPTS to modify the daemon startup options.
+#DOCKER_OPTS="--dns 8.8.8.8 --dns 8.8.4.4"
+
+# If you need Docker to use an HTTP proxy, it can also be specified here.
+#export http_proxy="http://127.0.0.1:3128/"
+
+# This is also a handy place to tweak where Docker's temporary files go.
+#export TMPDIR="/mnt/bigdrive/docker-tmp"
+DOCKER_OPTS="--insecure-registry load-balancer-291039105.us-west-2.elb.amazonaws.com"
+```
+
+Restart your daemon `sudo service docker restart`.
+
+##Log Into The Registry
+
+Before you can begin using your registry, you need to log into it:
+
+`docker login load-balancer-291039105.us-west-2.elb.amazonaws.com`
+
+The only credentials the registry knows about is `docker/docker` so use those when logging in.
+
+##Tag An Image And Push It
+Before you can push an image, you need to tag it so that it knows it is destined for your registry.  Pick an arbitrary image and use 
+the `docker tag` command.
+
+```bash
+docker tag 9a7784b5279d load-balancer-291039105.us-west-2.elb.amazonaws.com/docker/kurron/rabbitmq:latest
+
+docker push load-balancer-291039105.us-west-2.elb.amazonaws.com/docker/kurron/rabbitmq:latest
+```
+
+##Pull An Image
+A good way to test pulling is to remove all containers and images followed by a pull.
+
+```bash
+docker rm --volumes --force $(docker ps --all --quiet)
+docker rmi --force $(docker images --quiet)
+docker pull load-balancer-291039105.us-west-2.elb.amazonaws.com/docker/kurron/rabbitmq:latest
+```
 
 #Troubleshooting
 
@@ -37,10 +86,32 @@ If you run the `bin/ping-server.sh`, it should contact all your instances via SS
 ```bash
 bin/ping-server.sh
 
-TODO: fill in
+registry-blue | success >> {
+    "changed": false, 
+    "ping": "pong"
+}
 ```
 
 The script is running Ansible with the most verbose settings which may help troubleshoot any connection issues.
+
+##Checking The Endpoint
+To verify that your registry is available from the load balancer endpoint, use the `elb-dns` value output by the Terraform step and hit the endpoint.
+
+```bash
+curl load-balancer-291039105.us-west-2.elb.amazonaws.com/v2/ | python -m json.tool
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    87  100    87    0     0    331      0 --:--:-- --:--:-- --:--:--   330
+{
+    "errors": [
+        {
+            "code": "UNAUTHORIZED",
+            "detail": null,
+            "message": "authentication required"
+        }
+    ]
+}
+```
 
 ##Non-standard Docker Location
 In order to accomodate high inodes, Docker has been configured to use `/opt/docker` as its root file system.  The
