@@ -79,8 +79,8 @@
   hosts: Ubuntu
   sudo: true
   vars:
-       aws_key: "AKIAJQ7WYVOKOK2M4BXQ"
-       aws_secret_key: "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"
+       aws_key: "AKIAJFFJ73Z5VPCU7GUA"
+       aws_secret_key: "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"
        aws_region: "us-west-2"
        bucket_name: "org-kurron-docker-registry"
        auth_path: "/var/lib/auth"

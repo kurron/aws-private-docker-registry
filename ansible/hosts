@@ -1,5 +1,5 @@
 # This is the list of hosts to provision and the names that Ansible will know them by
-registry-blue ansible_ssh_host=52.33.66.169 ansible_ssh_port=22
+registry-blue ansible_ssh_host=52.27.2.166 ansible_ssh_port=22
 
 [docker]
 registry-blue
