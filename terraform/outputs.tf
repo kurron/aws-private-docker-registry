@@ -13,3 +13,7 @@
 #output "key-status" {
 #    value = "${aws_iam_access_key.registry_user.status}"
 #}
+
+output "elb-dns" {
+    value = "${aws_elb.load-balancer.dns_name}"
+}
