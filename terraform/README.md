@@ -23,7 +23,7 @@ done via a simple export command.
 
 You also need to have access to the private half of the AWS SSH key pair.  The file needs to be set to the correct permissions or 
 SSH will refuse to run.  Typically this is done via the `chmod` command: `chmod 0400 private-half.pem`.  The key should be 
-available as part of this source set and is named `asgard-lite-test.pem`.  Again, double check the permission bits before trying 
+available as part of this source set and is named `docker-registry-test.pem`.  Again, double check the permission bits before trying 
 to connect to an instance.
 
 If you want to use a different key pair, you'll need to edit the `variables.tf` and adjust the `key_name` variable to use your SSH Key 
