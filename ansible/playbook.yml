@@ -86,11 +86,11 @@
     - name: "aws_key"
       prompt: "The key value displayed at the end of the Terraform step."
       private: no
-      default: "AKIAJFFJ73Z5VPCU7GUA"
+      default: "AKIAIOSFODNN7EXAMPLE"
     - name: "aws_secret_key"
       prompt: "The secret-key value displayed at the end of the Terraform step."
       private: no
-      default: "tSduMZrxTJLrz4ahRj2DZwY8ZLfZk+T4gq/wGZ66"
+      default: "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY"
     - name: "aws_region"
       prompt: "The AWS region that the Terraform step ran against."
       private: no
