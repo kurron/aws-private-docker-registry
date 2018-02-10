@@ -1,3 +1,4 @@
 *.backup
 hosts.ini
 *.tfstate
+*.pem
