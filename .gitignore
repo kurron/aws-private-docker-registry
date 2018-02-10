@@ -1,2 +1,3 @@
 *.backup
 hosts.ini
+*.tfstate
